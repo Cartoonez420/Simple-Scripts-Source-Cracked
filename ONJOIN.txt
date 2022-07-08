@@ -1,0 +1,23 @@
+log("%@&prefix%Hello everyone! We have a new  Discord server. Invite Link: discord.gg/simplescript")
+log("%@&prefix%Please share the word!")
+log("%@&prefix%This alert will be removed in the future once we restore a great precent of members.")
+log("%@&prefix%discord.gg/simplescript")
+playsound(block.anvil.destroy,100)
+log(" ")
+log(" ")
+runscript(WEBHOOK.txt,"Webbie","ONJOIN")
+runscript(TOAST.txt,"TOAST","ONJOIN")
+if(@restartonjoin)
+set(@script)
+log("%@&prefix%&8AUTO_RESTART: &7Starting scripts in 5 seconds...")
+log("%@&prefix%&8AUTO_RESTART: &7Press &9&lH &7to cancel.")
+do()
+wait(1)
+inc(#count)
+if(KEY_K)
+log("%@&prefix%Stopped &9&lAutorestart")
+stop
+endif
+until(#count >= 6)
+runscript(START.txt,"START","AUTORESTART")
+endif

@@ -1,0 +1,173 @@
+do()
+if(!@teleport)
+if(@&leftcheck != "air")
+set(@fwd)
+unset(@rf)
+unset(@lf)
+set(@waiting)
+do()
+if(@&frontcheck == "air")
+runscript(DISCONNECT.txt,"DISCONNECT")
+if(!fmsg)
+log("%@&prefix%Detected end of row. Moving &9&lFORWARD&7.")
+set(fmsg)
+endif
+if(!@transitioncenter)
+keyup(left)
+keyup(right)
+centerto(500,500)
+log("%@&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+set(@transitioncenter)
+endif
+set(@fwd)
+if(@togglesprint)
+keydown(sprint)
+endif
+keydown(forward)
+endif
+until(@&frontcheck != "air")
+if(@&frontcheck != "air")
+keyup(forward)
+if(@togglesprint)
+keyup(sprint)
+endif
+unset(@fwd)
+unset(@waiting)
+unset(fmsg)
+unset(@center)
+set(@rf)
+endif
+endif
+if(@&rightcheck != "air")
+set(@fwd)
+unset(@rf)
+unset(@lf)
+wait(1t)
+set(@waiting)
+do()
+if(@&frontcheck == "air")
+if(!fmsg)
+log("%@&prefix%Detected end of row. Moving &9&lFORWARD&7.")
+set(fmsg)
+endif
+if(!@transitioncenter)
+keyup(left)
+keyup(right)
+centerto(500,500)
+log("%@&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+set(@transitioncenter)
+endif
+if(@togglesprint)
+keydown(sprint)
+endif
+keydown(forward)
+set(@fwd)
+endif
+until(@&frontcheck != "air")
+if(@&frontcheck != "air")
+keyup(forward)
+if(@togglesprint)
+keyup(sprint)
+endif
+unset(@fwd)
+unset(@waiting)
+unset(fmsg)
+unset(@center)
+set(@lf)
+endif
+endif
+endif
+if(@&below == "end_portal_frame")
+runscript(DISCONNECT.txt,"DISCONNECT")
+set(@teleport)
+if(@&tpleftcheck != "air")
+set(@fwd)
+unset(@rf)
+unset(@lf)
+set(@waiting)
+do()
+if(@&tpfrontcheck == "air")
+if(!fmsg)
+log("%@&prefix%Detected end of row. Moving &9&lFORWARD&7.")
+set(fmsg)
+endif
+if(!@transitioncenter)
+keyup(left)
+keyup(right)
+centerto(500,500)
+log("%@&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+set(@transitioncenter)
+endif
+set(@fwd)
+if(@togglesprint)
+keydown(sprint)
+endif
+keydown(forward)
+endif
+until(@&tpfrontcheck != "air")
+if(@&tpfrontcheck != "air")
+keyup(forward)
+if(@togglesprint)
+keyup(sprint)
+endif
+unset(@fwd)
+unset(@waiting)
+unset(fmsg)
+unset(@center)
+set(@rf)
+endif
+endif
+if(@&tprightcheck != "air")
+set(@fwd)
+unset(@rf)
+unset(@lf)
+wait(1t)
+set(@waiting)
+do()
+if(@&tpfrontcheck == "air")
+if(!fmsg)
+log("%@&prefix%Detected end of row. Moving &9&lFORWARD&7.")
+set(fmsg)
+endif
+if(!@transitioncenter)
+keyup(left)
+keyup(right)
+centerto(500,500)
+log("%@&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+set(@transitioncenter)
+endif
+if(@togglesprint)
+keydown(sprint)
+endif
+keydown(forward)
+set(@fwd)
+endif
+until(@&tpfrontcheck != "air")
+if(@&tpfrontcheck != "air")
+keyup(forward)
+if(@togglesprint)
+keyup(sprint)
+endif
+unset(@fwd)
+unset(@waiting)
+unset(fmsg)
+unset(@center)
+set(@lf)
+endif
+endif
+else
+unset(@teleport)
+endif
+if((@lf) && (@rf))
+unset(@lf)
+endif
+if((!@lf) && (!@rf))
+set(@rf)
+endif
+if((@rf) && (@fwd))
+unset(@fwd)
+endif
+if((@lf) && (@fwd))
+unset(@fwd)
+endif
+loop

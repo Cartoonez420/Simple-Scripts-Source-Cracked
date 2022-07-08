@@ -1,0 +1,308 @@
+// @&leftwater / @&rightwater - A check if a water stream is to your left, back one. Used to determine when to stop for the next harvesting.
+// @Barrier / @Barrier2 - The dirt & slab check to determine hwen your are at the end of the row.
+// @determined - A variable to indicate whether a farming direction has been decided. Useful for resuming the script on restart.
+// @rf / @lf - Right/Left Farming
+// @determined - Whether the script has a row ready to harvest.
+// @sc1 / @sc2 / @sc3 / @sc4 - Used to determine a new layer if @&leftwater & @&rightwater fail. (@&leftwater / @&rightwater are prioritized before this check runs.)
+&arg = $$[1]
+&arg2 = $$[2]
+if(&arg == "harvest")
+&prefix = "&dCANE_HARVESTER: &7"
+wait(2t)
+if((@determined) || (@&charcater == "reeds"))
+enable(reeds)
+do()
+if(@lf)
+keydown(left)
+endif
+if(@rf)
+keydown(right)
+endif
+if(@&character == "reeds")
+set(farming)
+endif
+if(farming)
+if((@&barrier == "air") && (@&barrier2 == "air") && (@&character != "reeds"))
+set(reset)
+endif
+if(@&teleport == "end_portal_frame")
+set(reset)
+endif
+endif
+until(reset)
+runscript(HARVESTER.txt,TRANSITION,transition)
+disable()
+else
+transition = isrunning("TRANSITION")
+if(!transition)
+disable()
+runscript(HARVESTER.txt,TRANSITION,transition)
+endif
+endif
+endif
+if(&arg == "transition")
+&prefix = "&5CANE_TRANSITION: &7"
+unset(@determined)
+unset(@lf)
+unset(@rf)
+wait(1t)
+exstop(TRANSITION,LOOPS,STAFF)
+keyup(forward)
+keyup(right)
+keyup(left)
+keyup(back)
+keyup(sneak)
+keyup(jump)
+keyup(sprint)
+untilstill()
+centerto(500,500)
+untilstill()
+if(@&direction == "northsouth")
+if(%DIRECTION% = "N")
+#transitionposition = %ZPOS%
+dec(#transitionposition,6)
+log("%&prefix%Calculated new position to &eZ: &a%#transitionposition%&7.")
+elseif(%DIRECTION% = "S")
+#transitionposition = %ZPOS%
+inc(#transitionposition,6)
+log("%&prefix%Calculated new position to &eZ: &a%#transitionposition%&7.")
+endif
+elseif(@&direction == "eastwest")
+if(%DIRECTION% = "E")
+#transitionposition = %XPOS%
+inc(#transitionposition,6)
+log("%&prefix%Calculated new position to &eX: &a%#transitionposition%&7.")
+elseif(%DIRECTION% = "W")
+#transitionposition = %XPOS%
+dec(#transitionposition,6)
+log("%&prefix%Calculated new position to &eX: &a%#transitionposition%&7.")
+endif
+endif
+log("%&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+log("%&prefix%Running double row transition to future coordinate: &a%#transitionposition%&7")
+do()
+keydown(sneak)
+keydown(forward)
+until((%ZPOS% == %#transitionposition%) || (%XPOS% == %#transitionposition%))
+random(#waittimer,25,97)
+log("%&prefix%Releasing keys in &2%#waittimer%ms&7")
+wait(#waittimer)
+keyup(forward)
+keyup(sneak)
+untilstill()
+centerto(500,500)
+untilstill()
+echo(/setspawn)
+wait(1t)
+log("%&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+runscript(HARVESTER.txt,DIRECTION,direction)
+wait(2t)
+endif
+if(&arg == "direction")
+&prefix = "&cCANE_DIRECTION: &7"
+keyup(forward)
+keyup(sneak)
+if(@&leftwater == "water")
+set(@lf)
+unset(@rf)
+set(@determined)
+log("%&prefix%Block scan complete, &d&l%@&leftwater% &7is present to the left")
+log(%&prefix%Executing &dCANE_HARVESTER&7)
+elseif(@&rightwater == "water")
+set(@rf)
+unset(@lf)
+set(@determined)
+log("%&prefix%Block scan complete, &d&l%@&rightwater% &7is present to the right")
+log(%&prefix%Executing &dCANE_HARVESTER&7)
+endif
+if(@determined)
+runscript(INITIALIZER.txt,LOADER,load,,resume)
+else
+log(%&prefix%Unable to determine a farming direction!)
+log(%&prefix%&8&oWhere are you though for real? on gd bdk on lambrod)
+log(%&prefix%Attempting to line up with a new row.)
+do()
+keydown(sneak)
+keydown(forward)
+if((@&sc1 == "reeds") && (@&sc2 == "reeds") && (@&sc3 == "reeds") && (@&sc4 == "reeds"))
+set(aligned)
+endif
+until((@&leftwater == "water") || (@&rightwater == "water") || (aligned))
+keyup(sneak)
+keyup(forward)
+centerto(500,500)
+untilstill()
+log("%&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+log("%&prefix%Aligned, running block detection")
+runscript(HARVESTER.txt,DIRECTION,direction)
+endif
+endif
+if(&arg == "synchronizer")
+&prefix = "&cSYNCHRONIZER: &7"
+if(&arg2 == "init")
+do()
+if(%HITID% == "reeds")
+#sc1 = getitemstacksize("Sugar Cane")
+#es1 = getitemstacksize("Enchanted Sugar")
+#esc1 = getitemstacksize("Enchanted Sugar Cane")
+wait(2)
+#sc2 = getitemstacksize("Sugar Cane")
+#es2 = getitemstacksize("Enchanted Sugar")
+#esc2 = getitemstacksize("Enchanted Sugar Cane")
+if((#sc1 == #sc2) && (#es1 == #es2) && (#esc1 == #esc2))
+runscript(HARVESTER.txt,SYNCHRONIZER,synchronizer,resync)
+stop()
+endif
+endif
+loop
+endif
+if(&arg2 == "resync")
+exstop(SYNCHRONIZER,LOOPS)
+log(%&prefix%Detected desync. Running fix!)
+disable()
+keyup(forward)
+keyup(right)
+keyup(left)
+keyup(back)
+keyup(sneak)
+keyup(jump)
+keyup(sprint)
+wait(3t)
+set(@bypass)
+echo(/hub)
+do()
+xpos = %XPOS%
+ypos = %YPOS%
+zpos = %ZPOS%
+wait(10)
+xpos2 = %XPOS%
+ypos2 = %YPOS%
+zpos2 = %ZPOS%
+until((%xpos% == %xpos2%) && (%ypos% == %ypos2%) && (%zpos% == %zpos2%))
+log(%&prefix%Waiting 30s)
+wait(30)
+unset(@bypass)
+log(%&prefix%Timer reached! &aInitiating &7failsafe)
+runscript(FAILSAFE.txt,FAILSAFE)
+endif
+endif
+if(&arg == "ladder")
+&prefix = "&cCANE_LADDER_SWITCH: &7"
+exstop(FAILSAFE,LOOPS,LADDER)
+log("%&prefix%Ladder &adetected&7, running transition")
+if(!ready)
+do()
+do()
+keydown(forward)
+keydown(sneak)
+until(@&character == "ladder")
+do()
+if(%@&newlayer% != "air")
+set(ready)
+endif
+until(ready)
+until(ready)
+endif
+if(ready)
+do()
+if(!rotated)
+#currentyaw = %YAW%
+inc(#currentyaw,360)
+LOOKS(%#currentyaw%,,0.34)
+set(rotated)
+endif
+until(%@&below% != "ladder")
+keyup(forward)
+keyup(sneak)
+untilstill()
+centerto(500,500)
+untilstill()
+runscript(INITIALIZER.txt,LOADER,load,,newlayer)
+endif
+endif
+if(&arg == "loops")
+do()
+if(%HITID% == "ladder")
+transition = isrunning("LADDER")
+if(!transition)
+disable()
+runscript(HARVESTER.txt,LADDER,ladder)
+endif
+endif
+if(@&below == "end_portal_frame")
+loader = isrunning("LOADER")
+if(!loader)
+runscript(INITIALIZER.txt,LOADER,load,,newlayer)
+endif
+endif
+if(@&direction == "northsouth")
+if(%DIRECTION% == "N")
+getidrel(-1,-1,1,@&leftwater)
+getidrel(1,-1,1,@&rightwater)
+getidrel(0,-1,1,@&behindwater)
+getidrel(0,-1,0,@&below)
+getidrel(0,0,0,@&character)
+getidrel(0,-1,-1,@&teleport)
+getidrel(-1,0,0,@&left)
+getidrel(1,0,0,@&right)
+getidrel(0,0,-2,@&barrier)
+getidrel(0,1,-2,@&barrier2)
+getidrel(1,0,0,@&sc1)
+getidrel(1,0,-1,@&sc2)
+getidrel(1,0,-3,@&sc3)
+getidrel(1,0,-4,@&sc4)
+getidrel(0,1,1,@&newlayer)
+elseif(%DIRECTION% == "S")
+getidrel(1,-1,-1,@&leftwater)
+getidrel(-1,-1,-1,@&rightwater)
+getidrel(1,-1,0,@&behindwater
+getidrel(0,-1,0,@&below)
+getidrel(0,0,0,@&character)
+getidrel(0,-1,1,@&teleport)
+getidrel(1,0,0,@&left)
+getidrel(-1,0,0,@&right)
+getidrel(0,0,2,@&barrier)
+getidrel(0,1,2,@&barrier2)
+getidrel(1,0,0,@&sc1)
+getidrel(1,0,1,@&sc2)
+getidrel(1,0,3,@&sc3)
+getidrel(1,0,4,@&sc4)
+getidrel(0,1,-1,@&newlayer)
+endif
+elseif(@&direction == "eastwest")
+if(%DIRECTION% == "E")
+getidrel(-1,-1,-1,@&leftwater)
+getidrel(-1,-1,1,@&rightwater)
+getidrel(-1,-1,0,@&behindwater)
+getidrel(0,-1,0,@&below)
+getidrel(0,0,0,@&character)
+getidrel(1,-1,0,@&teleport)
+getidrel(0,0,-1,@&left)
+getidrel(0,0,1,@&right)
+getidrel(2,0,0,@&barrier)
+getidrel(2,1,0,@&barrier2)
+getidrel(0,0,1,@&sc1)
+getidrel(1,0,1,@&sc2)
+getidrel(3,0,1,@&sc3)
+getidrel(4,0,1,@&sc4)
+getidrel(-1,1,0,@&newlayer)
+elseif(%DIRECTION% == "W")
+getidrel(1,-1,1,@&leftwater)
+getidrel(1,-1,-1,@&rightwater)
+getidrel(1,-1,0,@&behindwater)
+getidrel(0,-1,0,@&below)
+getidrel(0,0,0,@&character)
+getidrel(-1,-1,0,@&teleport)
+getidrel(0,0,1,@&left)
+getidrel(0,0,-1,@&right)
+getidrel(-2,0,0,@&barrier)
+getidrel(-2,1,0,@&barrier2)
+getidrel(0,0,1,@&sc1)
+getidrel(-1,0,1,@&sc2)
+getidrel(-3,0,1,@&sc3)
+getidrel(-4,0,1,@&sc4)
+getidrel(1,1,0,@&newlayer)
+endif
+endif
+loop
+endif

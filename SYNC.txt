@@ -1,0 +1,118 @@
+#synccheck = 2
+do()
+#amount_netherwart = getitemstacksize("Nether Wart")
+#amount_enchanted_netherwart = getitemstacksize("Enchanted Nether Wart")
+wait(%#synccheck%)
+#amount_netherwart2 = getitemstacksize("Nether Wart")
+#amount_enchanted_netherwart2 = getitemstacksize("Enchanted Nether Wart")
+if(%HIT_AGE% == 3)
+if((#amount_netherwart2) == (#amount_netherwart))
+if((#amount_enchanted_netherwart) == (#amount_enchanted_netherwart2))
+log("%@&prefix%&7Detected &cdesync&7. &7Press &9J &7to cancel this and keep farming.")
+do()
+inc(#time)
+if(KEY_J)
+set(cancelled)
+endif
+wait(1t)
+until((#time >= 35)||(KEY_J))
+if(cancelled)
+unset(cancelled)
+log("%@&prefix%Cancelled resync.")
+runscript(TOAST.txt,"TOAST","CSYNC")
+else
+log("%@&prefix%Proceeding.")
+log("%@&prefix%Detected desynchronization. Syncing with server.")
+set(@syncing)
+runscript(WEBHOOK.txt,"WEBHOOK","SYNC")
+keyup(forward)
+keyup(right)
+keyup(left)
+keyup(back)
+keyup(sneak)
+keyup(jump)
+keyup(sprint)
+exstop(SYNC,TIMER,PROFIT,LIMBO,ANTICAGE)
+disable()
+log("%@&prefix%Attempting resynchronization...")
+runscript(TOAST.txt,"TOAST","RESYNC")
+wait(1)
+log("%@&prefix%Warped to hub. Waiting 4 seconds...")
+runscript(TOAST.txt,"TOAST","HUB")
+echo(/hub)
+wait(4)
+do()
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+wait(1)
+inc(#transfertime)
+wait(3t)
+if(#transfertime > 10)
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+endif
+log("%@&prefix%Currently in: &9%&location%")
+log("%@&prefix%Current transfer time: %#transfertime%")
+if(&location == "Island")
+log("%@&prefix%Still on island, checking again in 10 seconds...")
+runscript(TOAST.txt,"TOAST","SYNCHUB")
+wait(10)
+// checking location again
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+log("%@&prefix%Currently in: &9%&location%")
+if(&location == "Island")
+log("%@&prefix%Attempting to go to hub again.")
+runscript(TOAST.txt,"TOAST","HUB")
+echo("/hub")
+endif
+endif
+until((&location == "Hub")||(&location == "Lobby")||(DIMENSION == "END"))
+wait(1)
+#countdown = 10
+do(10)
+wait(1)
+dec(#countdown)
+log("%@&prefix%Cooling script: &a%#countdown%s&7 remaining.")
+LOOP
+exstop(SYNC,PROFIT,TIMER,LIMBO,ANTICAGE)
+unset(@script)
+unset(@syncing)
+set(@resumed)
+log("%@&prefix%Starting failsafe")
+runscript(FAILSAFE.txt,"FAILSAFE")
+exstop(PROFIT,TIMER,FAILSAFE,LIMBO,ANTICAGE)
+endif
+endif
+endif
+endif
+loop

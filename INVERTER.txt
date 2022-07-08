@@ -1,0 +1,14 @@
+if(@northsouth)
+if(%DIRECTION% == "N")
+set(@invert)
+elseif(%DIRECTION% == "S")
+unset(@invert)
+endif
+endif
+if(@eastwest)
+if(%DIRECTION% == "W")
+set(@invert)
+elseif(%DIRECTION% == "E")
+unset(@invert)
+endif
+endif

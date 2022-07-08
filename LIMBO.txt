@@ -1,0 +1,16 @@
+wait(1)
+foreach(running)
+inc(#counter)
+next
+if(#counter > 1)
+wait(30)
+if(DIMENSION == "END")
+getid(-21,32,21,&limbosign)
+if(&limbosign == "wall_sign")
+log("%@&prefix%Detected Limbo. Warping out")
+runscript(FAILSAFE.txt,"FAILSAFE","LIMBO")
+wait(1t)
+stop
+endif
+endif
+endif

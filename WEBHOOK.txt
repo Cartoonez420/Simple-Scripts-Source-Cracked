@@ -1,0 +1,88 @@
+&arg = $$[1]
+&anticage = "https://discord.com/api/webhooks/963844206932164690/YdXjB8dZbG3sfrwJZa4lHmr0Hjoc6BltkWnmykebFrlAXJWJ9Q1ICaOWr7eKzm9gPOGU"
+if(&arg == "ANTICAGE")
+&content = {"content":"@everyone","embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x: \n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :white_check_mark:\n- Jacob's Dodger: :x:"}]}]}
+&content2 = {"content":"@everyone","embeds":[{"color":16711680,"author":{"name":"%PLAYER% just got caged %PLAYER%!","icon_url":"https://static.wikia.nocookie.net/hypixel-skyblock/images/7/76/Mutant_Nether_Wart.png/revision/latest?cb=20201108092807"}}]}
+&content2 = {"content":<@&948011709216465006>,"embeds":[{"color":16711680,"author":{"name":"A player just got caged","icon_url":"https://static.wikia.nocookie.net/hypixel-skyblock/images/7/76/Mutant_Nether_Wart.png/revision/latest?cb=20201108092807"}}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&anticage%,%&content%,#status)
+httppost(%&cage2%,%&content2%,#status)
+httppost(%&cage3%,%&content3%,#status)
+endif
+//actually sending to clients
+if(@webhooks)
+runscript(TOAST.txt,"TOAST","WEBHOOK")
+if(&arg == "VIEW")
+&content = {"content":"@everyone","embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged the following:","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :white_check_mark: \n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :x:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent View angle webhook")
+endif
+ifcontains(%@&labelsync%,"On")
+if(&arg == "SYNC")
+&content = {"content":null,"embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x:\n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :white_check_mark:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :x:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent Desync webhook")
+endif
+endif
+if(&arg == "HOECHECKER")
+&content = {"content":null,"embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x:\n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :x:\n- Hoe moved in hotbar: :white_check_mark:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+httppost(%&hoecheck%,%&content%,#status)
+endif
+ifcontains(%@&labeljacob%,"On")
+if(&arg == "JACOB")
+&content = {"content":null,"embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x:\n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :white_check_mark:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent Jacob dodger webhook")
+endif
+endif
+ifcontains(%@&labelprofithook%,"On")
+if(&arg == "PROFIT")
+&content = {"content":null,"embeds":[{"title":"Script: Nether Wart","color":16711680,"fields":[{"name":"Time running:","value":"%@&webhooktime%"},{"name":"Profit:","value":"%@&invvalue%"},{"name":"Profit per hour:","value":"%@&profit_per_hour%"}],"author":{"name":"%PLAYER%","icon_url":"https://crafatar.com/avatars/%UUID%"},"footer":{"text":"Simple Scripts\n%DATETIME%"},"image":{"url":""},"thumbnail":{"url":"https://crafatar.com/avatars/%UUID%"}}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent Profit Webhook")
+endif
+endif
+ifcontains(%@&labelfailsafe%,"On")
+if(&arg == "FAILSAFE")
+&content = {"content":null,"embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x:\n- Y-Position: :x:\n- Location: :white_check_mark:\n- Synchronization: :x:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :x:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent Failsafe webhook")
+endif
+endif
+if(&arg == "YLEVEL")
+&content = {"content":"@everyone","embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x:\n- Y-Position: :white_check_mark: \n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :x:\n- Jacob's Dodger: :x:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent YLEVEL antistaff webhook")
+endif
+if(&arg == "ANTICAGE")
+&content = {"content":"@everyone","embeds":[{"title":"simple scripts","description":"%PLAYER% has flagged a check.","url":"https://discord.gg/uq5wpgXzjs","color":5814783,"fields":[{"name":"Flags Triggered:","value":"- View Angles: :x: \n- Y-Position: :x:\n- Location: :x:\n- Synchronization: :x:\n- Bedrock Cage: :white_check_mark:\n- Jacob's Dodger: :x:"}]}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+log("%@&prefix%Sent Anticage webhook")
+endif
+if(&arg == "TEST")
+&content = {"content":"@everyone","embeds": [{"color": 16711680,"author": {"name": "Test webhook for %PLAYER%","icon_url": "https://static.wikia.nocookie.net/hypixel-skyblock/images/7/76/Mutant_Nether_Wart.png/revision/latest?cb=20201108092807"}}]}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%@&webhookurl%,%&content%,#status)
+runscript(TOAST.txt,"TAOST","TESTWEBHOOK")
+log("%@&prefix%Sent test webhook")
+endif
+endif

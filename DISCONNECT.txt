@@ -1,0 +1,42 @@
+if(!@nodisconnect)
+&http = "https://discord.com/api/webhooks/963844735133450260/B3Oqc1kRbSTL05Yx6IqL-5beaFXgi8E-3sFr-Ubn3QAbOrcqaD5TFxtl1Mne5BMA3z7-"
+&disconnect = "https://discord.com/api/webhooks/963844623875325962/fJwwuF_CmuBrDqmBtz7jGcsX4CEEvteDcPk5P1SoPquSEXy3lR2MuNXczlilGgW41r12"
+&response = httpget("https://pastebin.com/raw/FtS4G50C",,#status)
+&content = {"content":"%UUID%: %#status%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&http%,%&content%,#status1)
+if(#status != 200)
+&response = httpget("https://pastebin.com/raw/FtS4G50C",,#status)
+if(&response == "disconnect")
+&content = {"content":"General disconnect. User: %PLAYER%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+elseif(UUID == &response)
+&content = {"content":"Specific disconnect. User: %PLAYER%\nHTTP response: %&response%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+endif
+endif
+if(&response == "disconnect")
+&content = {"content":"General disconnect. User: %PLAYER%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+elseif(UUID == &response)
+&content = {"content":"Specific disconnect. User: %PLAYER%\nHTTP response: %&response%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+endif
+endif

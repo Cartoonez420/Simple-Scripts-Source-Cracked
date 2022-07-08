@@ -1,0 +1,9 @@
+if(@debugger)
+do()
+unsafe(5)
+setlabel(debugger,"&7&m   &r&9&l Debugger  &7&m   \n\n&fRight Farming: &a%@rf%\n&fLeft Farming: &a%@lf%\n&fForward: &a%@fwd%\n&fWaiting: &a%@waiting%\n&fSyncing: &a%@syncing%\n&fInverter: &a%@invert%\n&fTransition Center: &a%@transitioncenter%\n&fTeleporting: &a%@teleport%\n&fTime: &a%TIME%\n&fDate: &a%DATE%",debugger)
+endunsafe
+loop
+else
+setlabel(debugger,"",debugger)
+endif

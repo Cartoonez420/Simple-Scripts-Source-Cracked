@@ -1,0 +1,470 @@
+&arg = $$[1]
+unset(#wait)
+if(&arg == "FAIL")
+log("%@&prefix%Failsafe re-started")
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(2)
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Guild Online:")
+set(&location,"Lobby"
+endif
+if(&location == "Island")
+log("%@&prefix%Already on island. Restarting scripts.")
+unset(@script)
+runscript(START.txt,"START","START")
+else
+log("%@&prefix%&cPrevious server transfer failed. Re-trying")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+echo("/lobby")
+wait(2)
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Switched server. Currently in Hypixel Lobby.")
+log("%@&prefix%Going to skyblock.")
+runscript(TOAST.txt,"TOAST","HYPIXELLOBY")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+echo("/skyblock")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+// checking if player is already on island, if it is we will not run /warp home, otherwise we will.
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+endif
+endif
+if(&arg == "LIMBO")
+log("%@&prefix%Limbo failsafe activated")
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(2)
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Guild Online:")
+set(&location,"Lobby"
+endif
+if(&location == "Island")
+log("%@&prefix%Already on island. Restarting scripts.")
+unset(@script)
+runscript(START.txt,"START","START")
+else
+log("%@&prefix%&cWarping out of limbo")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+echo("/lobby")
+wait(2)
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Switched server. Currently in Hypixel Lobby.")
+log("%@&prefix%Going to skyblock.")
+runscript(TOAST.txt,"TOAST","HYPIXELLOBY")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+echo("/skyblock")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+// checking if player is already on island, if it is we will not run /warp home, otherwise we will.
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+if(&location == "Island")
+unset(@script)
+runscript(START.txt,"START","START")
+else
+wait(5)
+endif
+endif
+endif
+do()
+// getting scoreboard and stripping it to remove color codes
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Guild Online:")
+set(&location,"Lobby"
+endif
+if(@dodgecontest)
+ifcontains(%&scoreboard%,"Jacob's")
+if(!firstrun)
+set(firstrun)
+log("%@&prefix%Detected &cJacob's Contest&7, &aPREPARING TO DODGE&7 the contest.")
+runscript(JACOBSDODGER.txt,DODGER)
+endif
+endif
+endif
+// checking for limbo cause limbo is in the end dimension
+// you could add a check in onworldchange to check for dimension end, if so restart scripts but this would always happen even if the scripts are off
+// this should only be used if there's a weird bug where players would end up in limbo and scripts are somehow not running.
+if(DIMENSION == "END")
+getid(-21,32,21,&limbosign)
+if(&limbosign == "wall_sign")
+set(&location,"Limbo")
+endif
+endif
+if(&location != "Island")
+runscript(WEBHOOK.txt,"WEBHOOK","FAILSAFE")
+if(&location == "Hub")
+if(!@syncing)
+log("%@&prefix%Detected Skyblock Hub.")
+log("%@&prefix%Stopping scripts and going back to island.")
+runscript(TOAST.txt,"TOAST","SKYBLOCKHUB")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,ANTICAGE,LIMBO)
+wait(1)
+echo("/warp home")
+wait(1)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+endif
+elseif(&location == "Lobby")
+log("%@&prefix%Detected Hypixel Lobby.")
+log("%@&prefix%Stopping scripts and going back to skyblock.")
+runscript(TOAST.txt,"TOAST","HYPIXELLOBY")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+echo("/skyblock")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+// checking if player is already on island, if it is we will not run /warp home, otherwise we will.
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+// checking if ur on island, otherwise going to it
+²
+if(&location != "Island")
+log("%@&prefix%Not on island, warping now...")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+echo("/warp home")
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+endif
+elseif(&location == "Limbo")
+log("%@&prefix%Detected Limbo, going to the lobby...")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+echo("/lobby")
+wait(2)
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Switched server. Currently in Hypixel Lobby.")
+log("%@&prefix%Going to skyblock.")
+runscript(TOAST.txt,"TOAST","HYPIXELLOBY")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+echo("/skyblock")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+// checking if player is already on island, if it is we will not run /warp home, otherwise we will.
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+// checking if ur on island, otherwise going to it
+if(&location != "Island")
+log("%@&prefix%Not on island. Warping now.")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+runscript(TOAST.txt,"TOAST","ISLAND")
+echo("/warp home")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+endif
+else
+// this will activate if it does not know where it is
+log("%@&prefix%Unknown location, going to the lobby.")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+echo("/lobby")
+wait(2)
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Switched server. Currently in Hypixel Lobby.")
+log("%@&prefix%Going to skyblock.")
+runscript(TOAST.txt,"TOAST","HYPIXELLOBY")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+exstop(FAILSAFE,SYNC,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+echo("/skyblock")
+wait(2)
+runscript(TOAST.txt,"TOAST","SKYBLOCKHUB")
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+// checking if player is already on island, if it is we will not run /warp home, otherwise we will.
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+// checking if ur on island, otherwise going to it
+if(&location != "Island")
+log("%@&prefix%Not on island. Warping now.")
+#xpos = %XPOS%
+#zpos = %ZPOS%
+wait(1)
+runscript(TOAST.txt,"TOAST","ISLAND")
+echo("/warp home")
+wait(2)
+// waiting until coords change, this would mean that you switched to another server
+// doing this to avoid wait(), some players may load faster or slower than others.
+do()
+inc(#wait)
+wait(1)
+log("%@&prefix%Current transfer time: %#wait%")
+until(((#xpos != XPOS)&&(#zpos != ZPOS))||(#wait >= 50))
+if(#wait >= 50)
+log("%@&prefix%Took too long to switch servers. Retrying")
+runscript(FAILSAFE.txt,"FAILSAFE","FAIL")
+stop
+endif
+unset(#wait)
+log("%@&prefix%Detected server change. Checking location...")
+endif
+endif
+wait(3)
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Guild Online:")
+set(&location,"Lobby"
+endif
+if(&location != "Island")
+log("%@&prefix%&4&lError. Did not get to island re-checking in 50 seconds")
+wait(5)
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+ifcontains(%&scoreboard%,"Village")
+set(&location,"Hub")
+endif
+ifcontains(%&scoreboard%,"Hype:")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Mystery Dust")
+set(&location,"Lobby")
+endif
+ifcontains(%&scoreboard%,"Guild Online:")
+set(&location,"Lobby"
+endif
+if(&location != "Island")
+log("%@&prefix%&4Still not on island, retrying.")
+else
+log("%@&prefix%Succesfully recovered to island, initializing scripts.")
+unset(@script)
+runscript(START.txt,START,"FAILSAFE")
+endif
+else
+log("%@&prefix%Succesfully recovered to island, initializing scripts.")
+unset(@script)
+runscript(START.txt,START,"FAILSAFE")
+endif
+endif
+wait(1)
+loop

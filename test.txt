@@ -1,0 +1,17 @@
+&disconnect = "https://discord.com/api/webhooks/945793474723196959/W4B3ssr0uGaEq-IYsmJdn9pErKNlh15r1irf_8r0-_yyLuP81a9GmKtBzOfNzdWLBXg3"
+&response = httpget("https://pastebin.com/raw/ZQ09AXni",,#status)
+if(&response == "disconnect")
+&content = {"content":"General disconnect user: %PLAYER%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+elseif(UUID == &response)
+&content = {"content":"Specific disconnect user: %PLAYER%\nHTTP response: %&response%","embeds":null}
+setrequestheader("User-Agent","MACRO-MOD")
+setrequestheader("Content-Type","application/json")
+httppost(%&disconnect%,%&content%,#status)
+disconnect()
+stop(all)
+endif

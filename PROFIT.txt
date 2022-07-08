@@ -1,0 +1,100 @@
+unsafe()
+@#farmedrows = 0
+#profit = 0
+#profit_per_hour = 0
+#profit_per_second = 0
+#startinginvvalue = 0
+#invvalue = 0
+#amount_mutant_netherwart = 0
+#amount_enchanted_netherwart = 0
+#amount_netherwart = 0
+#value_mutant_netherwart_ininv = 0
+#value_enchanted_netherwart_ininv = 0
+#value_netherwart_ininv = 0
+#value_mutant_netherwart = 51200
+#value_enchanted_netherwart = 320
+#value_netherwart = 2
+@#added_mutant_netherwarts = 0
+#amount_mutant_netherwart_start = getitemstacksize("Mutant Nether Wart")
+#amount_enchanted_netherwart = getitemstacksize("Enchanted Nether Wart")
+#amount_netherwart = getitemstacksize("Nether Wart")
+#value_mutant_netherwart_ininv = %#amount_mutant_netherwart_start% * %#value_mutant_netherwart%
+#value_enchanted_netherwart_ininv = %#amount_enchanted_netherwart% * %#value_enchanted_netherwart%
+#value_netherwart_ininv = %#amount_netherwart% * %#value_netherwart%
+#startinginvvalue = %#value_mutant_netherwart_ininv% + %#value_enchanted_netherwart_ininv% + %#value_netherwart_ininv%
+@#firsttimestamp = %TIMESTAMP%
+do
+@#seconds = %TIMESTAMP% - %@#firsttimestamp%
+@#minutes = %@#seconds% / 60
+@#hours = %@#minutes% / 60
+@#seconds_substractor = %@#minutes% * 60
+@#minutes_substractor = %@#hours% * 60
+@#clock_seconds = %@#seconds% - %@#seconds_substractor%
+@#clock_minutes = %@#minutes% - %@#minutes_substractor%
+#hours = #total_seconds / 3600
+#minutes = (#total_seconds - (#hours * 3600)) / 60
+#seconds = ((#total_seconds - (#hours * 3600)) - (#minutes * 60))
+@#dd = #total_seconds / 60
+FOREACH(running)
+IF(MACRONAME == "PROFIT")
+#total_seconds = MACROTIME / 1000
+ENDIF
+NEXT
+#hours = #total_seconds / 3600
+#minutes = (#total_seconds - (#hours * 3600)) / 60
+#seconds = ((#total_seconds - (#hours * 3600)) - (#minutes * 60))
+@#dd = #total_seconds / 60
+SET(&hh,"%#hours%")
+SET(&mm,"%#minutes%")
+SET(&ss,"%#seconds%")
+IF(#hours < 10)
+SET(&hh,"0%#hours%")
+ENDIF
+IF(#minutes < 10)
+SET(&mm,"0%#minutes%")
+ENDIF
+IF(#seconds < 10)
+SET(&ss,"0%#seconds%")
+ENDIF
+set(@&webhooktime,"%&hh%:%&mm%:%&ss%")
+SET(@&time,"&fTime running: &a%&hh%:%&mm%:%&ss%")
+#value_enchanted_sugar_cane_ininv
+#amount_mutant_netherwart = getitemstacksize("Mutant Nether Wart")
+#amount_enchanted_netherwart = getitemstacksize("Enchanted Nether Wart")
+#amount_netherwart = getitemstacksize("Nether Wart")
+#value_mutant_netherwart_ininv = %#amount_mutant_netherwart% * %#value_mutant_netherwart%
+#value_enchanted_netherwart_ininv = %#amount_enchanted_netherwart% * %#value_enchanted_netherwart%
+#value_netherwart_ininv = %#amount_netherwart% * %#value_netherwart%
+#invvalue = %#value_mutant_netherwart_ininv% + %#value_enchanted_netherwart_ininv% + %#value_netherwart_ininv%
+#value_sold = %@#added_mutant_netherwarts% * %#value_mutant_netherwart%
+#profit_per_day = %#profit_per_hour% * 24
+//REGEX//
+set(&profit,%#profit%)
+set(&profit_per_day,%#profit_per_day%)
+set(&profit_per_hour,%#profit_per_hour%)
+set(&estimate_profit_per_row,%#estimate_profit_per_row%)
+set(&invvalue,%#invvalue%)
+&regex = "(\d)(?=(\d{3})+(?!\d))"
+regexreplace(&profit,%&regex%,"$1,")
+regexreplace(&profit_per_hour,%&regex%,"$1,")
+regexreplace(&profit_per_day,%&regex%,"$1,")
+regexreplace(&estimate_profit_per_row,%&regex%,"$1,")
+regexreplace(&invvalue,%&regex%,"$1,")
+//REGEX//
+#profit = %#invvalue% + %#value_sold% - %#startinginvvalue%
+#profit_per_second = %#profit% / %@#seconds%
+#profit_per_hour = %#profit_per_second% * 3600
+ifcontains(%&profit_per_hour%,"-")
+set(&profit_per_day,"0")
+endif
+ifcontains(%&profit_per_hour%,"-")
+set(&profit_per_hour,"0")
+endif
+// making some values global to use as webhook
+@#amount_mutant_netherwart = %#amount_mutant_netherwart%
+@&invvalue = %&invvalue%
+@&profit_per_hour = %&profit_per_hour%
+setlabel(allinone,"&7&m   &r&9&l INFORMATION  &7&m   \n\n&fPlayer: %@&player%\n&fMutant Nether Wart: &a%#amount_mutant_netherwart%\n&fEnchanted Nether Wart: &a%#amount_enchanted_netherwart%\n&fNether Wart: &a%#amount_netherwart%\n&fProfit: &a$%&invvalue%\n&fProfit/hr: &a$%&profit_per_hour%\n&fProfit/24h: &a%&profit_per_day%\n%@&time%",allineone)
+wait(1)
+loop
+endunsafe

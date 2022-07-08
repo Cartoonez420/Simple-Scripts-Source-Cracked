@@ -1,0 +1,18 @@
+do()
+if(GUI != "NONE")
+log("%@&prefix%Detected a GUI. Terminating scripts.")
+exstop(FAILSAFE,PROFIT,LIMBO,ANTICAGE)
+wait(1)
+gui()
+wait(3t)
+if(GUI != "NONE")
+press(escape)
+#count = 30
+do(30)
+dec(#count)
+log("%@&prefix%Cooling down, %#count% seconds left.")
+until(#count <= 30)
+runscript(START.txt,"START","START")
+endif
+endif
+loop

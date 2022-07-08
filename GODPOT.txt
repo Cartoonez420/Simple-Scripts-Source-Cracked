@@ -1,0 +1,63 @@
+if(@autogodpot)
+do()
+wait(5)
+&footer = getfooter()
+strip(&footer,%&footer%)
+ifnotcontains(%&footer%,"God Potion")
+for(#i,1,9)
+getslotitemext(%#i%,,,,&name)
+strip(&name,%&name%)
+if(&name == "God Potion")
+set(foundgodpot)
+endif
+next
+if(foundgodpot)
+if(!donotrepeat)
+exstop(PROFIT,GODPOT,LOOPS,LIMBO,ANTICAGE)
+disable()
+keyup(forward)
+keyup(right)
+keyup(left)
+keyup(back)
+keyup(sneak)
+keyup(jump)
+keyup(sprint)
+log("%@&prefix%No &cGod potion&7 active!")
+log("%@&prefix%Looking for a new one in hotbar")
+notify("&9&lSimple Scripts","No &cgod potion &7active!",10000)
+notify("&9&lSimple Scripts","Looking for a new one in hotbar",10000)
+for(#i,1,9)
+getslotitemext(%#i%,,,,&name)
+strip(&name,%&name%)
+if(&name == "God Potion")
+set(found)
+log("%@&prefix%Found a god potion in slot &9%#i%")
+log("%@&prefix%Attempting to drink god potion")
+notify("&9&lSimple Scripts","Found a god potion in slot &9%#i%",10000)
+wait(3t)
+slot(%#i%)
+wait(10t)
+do()
+key(use)
+wait(1t)
+until(MAINHANDITEM == "air")
+log("%@&prefix%Succesfully drank god potion")
+notify("&9&lSimple Scripts","&aSuccessfully &7drank god potion",10000)
+unset(@script)
+runscript(START.txt,"START","FAILSAFE")
+endif
+next
+if(!found)
+log("%@&prefix%&cFailed &7to drink a god potion.")
+log("%@&prefix%You do not have a god potion in your hotbar.")
+notify("&9&l","&cNo god potion in hotbar",1000000)
+set(donotrepeat)
+endif
+endif
+else
+notify("&9&l","&cNo god potion in hotbar",5000000)
+wait(500000)
+endif
+endif
+loop
+endif

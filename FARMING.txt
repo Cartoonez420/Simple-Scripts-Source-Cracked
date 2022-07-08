@@ -1,0 +1,106 @@
+unset(@waiting)
+keyup(left)
+keyup(right)
+if(@northsouth)
+if(@invert)
+look(0,5)
+else
+look(180,5)
+endif
+endif
+if(@eastwest)
+if(@invert)
+// west
+look(270,5)
+else
+// east
+look(90,5)
+endif
+endif
+keydown(forward)
+wait(1t)
+keyup(forward)
+// hoe selector (picks hoe in order, diamond hoe has priority, then iron hoe
+pick(diamond_hoe,iron_hoe,stone_hoe,wooden_hoe)
+wait(3t)
+if((MAINHANDITEM != "diamond_hoe")&&(MAINHANDITEM != "iron_hoe")&&(MAINHANDITEM != "stone_hoe")&&(MAINHANDITEM != "wooden_hoe"))
+wait(2)
+unset(&location)
+getscoreboard(&scoreboard)
+strip(&scoreboard,%&scoreboard%)
+ifcontains(%&scoreboard%,"Your Island")
+set(&location,"Island")
+endif
+if(&location == "Island")
+log("%@&prefix%Found no available farming hoe, stopping scripts.")
+stop(*)
+disable()
+endif
+endif
+do()
+if(%HITID% == "ladder")
+runscript(LADDERSWITCH.txt,SWITCH)
+endif
+getidrel(0,-1,0,&bedrock)
+if(&bedrock == "bedrock")
+runscript(WEBHOOK.txt,"WEBHOOK",ANTICAGE)
+runscript(ANTICAGE.txt,"ANTICAGE",init)
+endif
+if(@lf)
+if(!@fwd)
+if(!@lmsg)
+log("%@&prefix%Detected a new row. Moving &9&lLEFT&7.")
+if(!lset)
+echo(/sethome)
+set(lset)
+unset(rset)
+endif
+set(@lmsg)
+unset(@rmsg)
+endif
+if(!@waiting)
+keyup(right)
+if(!lwalking)
+unset(rwalking)
+unset(@transitioncenter)
+keydown(left)
+set(lwalking)
+endif
+endif
+endif
+endif
+if(@rf)
+if(!@fwd)
+if(!@rmsg)
+log("%@&prefix%Detected a new row. Moving &9&lRIGHT&7.")
+if(!rset)
+echo(/sethome)
+set(rset)
+unset(lset)
+endif
+unset(@lmsg)
+set(@rmsg)
+endif
+if(!@waiting)
+keyup(left)
+if(!rwalking)
+unset(lwalking)
+unset(@transitioncenter)
+keydown(right)
+set(rwalking)
+endif
+endif
+endif
+endif
+if(%FLYING%)
+do()
+keydown(sneak)
+until(!%FLYING%)
+keyup(sneak)
+endif
+if(%ITEM% == "filled_map")
+log("%@&prefix%&4Maptcha detected!&7 Terminating all scripts!")
+stop(all)
+disable()
+endif
+loop

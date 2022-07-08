@@ -1,0 +1,35 @@
+#threshold_for_reboot = 2
+unset(@#timesstuck)
+do
+if((#last_x == %XPOS%) && (#last_y == %YPOS%) && (#last_z == %ZPOS%))
+#timestamp_stuck = %TIMESTAMP%
+#seconds_since_update = %#timestamp_stuck% - %#timestamp_updated%
+if(%#seconds_since_update% >= #threshold_for_reboot)
+log("%@&prefix%No movement detected. Running fix. (%@#timesstuck%)")
+inc(@#timesstuck)
+exstop(ANTISTUCK,LOOPS,TIMER,PROFIT,FAILSAFE,LIMBO)
+disable()
+keydown(left)
+wait(5t)
+keyup(left)
+keydown(right)
+wait(5t)
+keyup(right)
+keydown(back)
+wait(5t)
+keyup(back)
+keydown(forward)
+wait(5t)
+keyup(forward)
+unset(@script)
+set(@resumed)
+runscript(START.txt,START,"START")
+stop()
+endif
+else
+#timestamp_updated = %TIMESTAMP%
+#last_x = %XPOS%
+#last_y = %YPOS%
+#last_z = %ZPOS%
+endif
+loop

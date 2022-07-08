@@ -1,0 +1,107 @@
+do()
+exstop(LOOPS,TIMER,PROFIT,FAILSAFE,LIMBO,ANTICAGE)
+disable()
+set(switching)
+if(%HITID% == "ladder")
+runscript(TOAST.txt,"TOAST","LADDER")
+if(!center)
+log("%@&prefix%Detected ladder. &9&lRUNNING TRANSITION&7.")
+keyup(forward)
+keyup(right)
+keyup(left)
+keyup(back)
+keyup(sneak)
+keyup(jump)
+keyup(sprint)
+log("%@&prefix%Centering to ladder...")
+keydown(sneak)
+centerto(500,500)
+wait(4t)
+set(center)
+untilstill()
+keyup(sneak)
+log("%@&prefix%Centered to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+endif
+endif
+if(center)
+do()
+if(!latching)
+getidrel(0,0,0,&ladder)
+if(&ladder != "ladder")
+log("%@&prefix%Switching layers...")
+runscript(TOAST.txt,"TOAST","LADDERUP")
+keydown(forward)
+keydown(sneak)
+set(latching)
+endif
+endif
+if(!transition)
+getidrel(0,0,0,&ladder)
+if(&ladder == "ladder")
+set(transition)
+endif
+endif
+if(transition)
+do()
+if(@northsouth)
+if(@invert)
+getidrel(0,1,1,&newlayer)
+else
+getidrel(0,1,-1,&newlayer)
+endif
+endif
+if(@eastwest)
+if(@invert)
+getidrel(1,1,0,&newlayer)
+else
+getidrel(-1,1,0,&newlayer)
+endif
+endif
+if(&newlayer == "dirt")
+if(!setangles)
+log("%@&prefix%Flipping orientation...")
+#yaw = %CARDINALYAW%
+inc(#yaw,180)
+random(#test,40,70)
+set(&test,%#test%)
+push(&array[],"0")
+push(&array[],".")
+push(&array[],%&test%)
+join("",&array[],&turnspeed)
+log("%@&prefix%Randomized Rotation Speed: &9&l%&turnspeed%")
+looks(%#yaw%,,%&turnspeed%)
+set(setangles)
+endif
+endif
+getidrel(0,-1,0,&below)
+if(&below == "dirt")
+if(!ready)
+keyup(forward)
+keyup(sneak)
+keydown(sneak)
+centerto(500,500)
+set(center)
+untilstill()
+keyup(sneak)
+set(ready)
+log("%@&prefix%Centered new layer to &eX: &a%XPOSF% &7 &eZ: &a%ZPOSF%&7.")
+log("%@&prefix%&aReady&7 for harvesting.")
+runscript(TOAST.txt,"TOAST","READY")
+wait(2t)
+unset(@#timesstuck)
+runscript(WEBHOOK.txt,"WEBHOOK","PROFIT")
+runscript(DISCONNECT.txt,"DISCONNECT")
+if(@uncapped)
+runscript(WEBHOOK.txt,"WEBHOOK","UNCAP")
+endif
+unset(@script)
+set(@resumed)
+toggle(@invert)
+runscript(START.txt,START,"START")
+endif
+endif
+loop
+endif
+loop
+endif
+loop

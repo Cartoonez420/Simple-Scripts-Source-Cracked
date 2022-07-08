@@ -1,0 +1,5 @@
+do()
+if(HITID == "nether_wart")
+key(attack)
+endif
+loop
